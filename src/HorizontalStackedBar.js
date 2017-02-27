@@ -6,6 +6,7 @@ import { scaleLinear } from 'd3-scale'
 import { stack } from 'd3-shape'
 
 import getNames from './getNames'
+import getColors from './getColors'
 import sumValues from './sumValues'
 import toObject from './toObject'
 import decorateSeriesWithOriginalData from './decorateSeriesWithOriginalData'
@@ -32,12 +33,15 @@ function HorizontalStackedBar ({
 }) {
   const names = getNames(data)
   const dataAsObject = toObject(data)
-
+  const colors = getColors(data)
   const seriesGenerator = stack().keys(names)
   const decoratedSeries = decorateSeriesWithOriginalData(
     seriesGenerator([ dataAsObject ]),
     data
   )
+  console.log(decoratedSeries)
+  console.log(colors)
+
 
   const total = sumValues(data)
   const xScale = scaleLinear().domain([0, total]).range([0, width])
@@ -54,7 +58,6 @@ function HorizontalStackedBar ({
   const groups = svg.selectAll('g')
                     .data(decoratedSeries)
                     .enter().append('g')
-                      .style('fill', ([ firstItem ], i) => generateFillColour(firstItem, i))
 
   // Add a block
   groups.selectAll('rect')
@@ -63,6 +66,7 @@ function HorizontalStackedBar ({
           .attr('x', (d) => xScale(d[0]))
           .attr('height', () => height)
           .attr('width', (d) => xScale(d.value))
+          .attr('fill', (d) => {console.log(d);return d.color})
 
   // Associate some text with a block
   groups.selectAll('text')
