@@ -18,7 +18,7 @@ function identity (value) {
   return value
 }
 
-const DEFAULT_WIDTH = 4500
+const DEFAULT_WIDTH = 2500
 const DEFAULT_HEIGHT = 150
 
 function HorizontalStackedBar ({
@@ -39,9 +39,6 @@ function HorizontalStackedBar ({
     seriesGenerator([ dataAsObject ]),
     data
   )
-  console.log(decoratedSeries)
-  console.log(colors)
-
 
   const total = sumValues(data)
   const xScale = scaleLinear().domain([0, total]).range([0, width])
@@ -66,17 +63,7 @@ function HorizontalStackedBar ({
           .attr('x', (d) => xScale(d[0]))
           .attr('height', () => height)
           .attr('width', (d) => xScale(d.value))
-          .attr('fill', (d) => {console.log(d);return d.color})
-
-  // Associate some text with a block
-  groups.selectAll('text')
-        .data(identity)
-        .enter().append('text')
-          .text(generateLabel)
-          .attr('x', (d) => xScale(d[0]) + xScale(d.value) / 2)
-          .attr('y', '50%')
-          .attr('alignment-baseline', 'middle')
-          .attr('text-anchor', 'middle')
+          .attr('fill', (d) => {return d.color})
 
   return svgContainer.toReact()
 }
